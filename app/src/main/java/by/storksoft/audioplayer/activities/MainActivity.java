@@ -44,6 +44,8 @@ import by.storksoft.vkontakte.AudioItem;
 
 import static android.graphics.Typeface.BOLD;
 
+//TODO: refactor
+//TODO: probably need to move playlist creation to fragments
 public class MainActivity extends AppCompatActivity {
 
     private static final LinearLayout.LayoutParams LAYOUT_PARAMS = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -164,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //TODO: avoid seek bar and time labels recreationg when moving between cached and all audios
     private void displayPlaylist(boolean cachedOnly) {
         //top container
         FrameLayout Frame = ((FrameLayout) findViewById(R.id.content_frame));
@@ -230,15 +233,15 @@ public class MainActivity extends AppCompatActivity {
         playlistLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         list.clear();
         for (AudioItem a : playlist) {
-            if (!service.fileExistance(a.getId()) && cachedOnly) continue;
+            if (!service.fileExistence(a.getId()) && cachedOnly) continue;
             //container for the song
             RelativeLayout songLayout = new RelativeLayout(this);
             LinearLayout left = new LinearLayout(this);
             left.setOrientation(LinearLayout.HORIZONTAL);
-            //if (service.fileExistance(a.getId())) {
+            //if (service.fileExistence(a.getId())) {
             TextView cachedIndicator = new TextView(this);
             cachedIndicator.setTextSize(30);
-            if (service.fileExistance(a.getId())) cachedIndicator.setText("|");
+            if (service.fileExistence(a.getId())) cachedIndicator.setText("|");
             else cachedIndicator.setText(" ");
             //ind.setLayoutParams(rp);
             left.addView(cachedIndicator);

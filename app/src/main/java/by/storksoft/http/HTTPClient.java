@@ -24,8 +24,8 @@ import java.util.List;
  * Doesn't work on pure Java either.
  * Used only for VK Apps for now
  * Uses Apache HTTP Client
+ * TODO: add other methods
  */
-
 public class HTTPClient {
 
     private CloseableHttpClient client; //apache client

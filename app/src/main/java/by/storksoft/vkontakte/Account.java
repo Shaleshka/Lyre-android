@@ -20,6 +20,7 @@ import static by.storksoft.vkontakte.utils.ParsingUtils.extractNextAuidoDuration
 /**
  * Unites all methods related to VK account management. Represents
  * an account, stores its parameters and audios and video objects.
+ * TODO: enrich with other parameters (first name, pictue, etc.)
  */
 public class Account {
 
