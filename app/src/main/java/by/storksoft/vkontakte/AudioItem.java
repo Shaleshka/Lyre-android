@@ -1,32 +1,28 @@
-package by.storksoft.VKontakte;
+package by.storksoft.vkontakte;
 
 /**
  * Stores info about song.
  */
 
-public class audioItem {
-    private String Artist, Name, mp3URL, id;
-    private int Duration;
+public class AudioItem {
+    private String artist, Name, mp3URL, id;
+    private int duration;
     private boolean cached;
 
-    audioItem(String artist, String name, String url, int duration, String id) {
-        Artist = artist;
+    AudioItem(String artist, String name, String url, int duration, String id) {
+        this.artist = artist;
         Name = name;
         mp3URL = url;
-        Duration = duration;
+        this.duration = duration;
         this.id = id;
     }
 
-    public void play() {
-        //there should be android code
-    }
-
     public String getArtist() {
-        return Artist;
+        return artist;
     }
 
     public void setArtist(String artist) {
-        Artist = artist;
+        this.artist = artist;
     }
 
     public String getName() {
@@ -46,11 +42,11 @@ public class audioItem {
     }
 
     public int getDuration() {
-        return Duration;
+        return duration;
     }
 
     public void setDuration(int duration) {
-        Duration = duration;
+        this.duration = duration;
     }
 
     public static String getDurationAsString(int Duration) {
@@ -66,7 +62,7 @@ public class audioItem {
     }
 
     public String getDurationAsString() {
-        return getDurationAsString(Duration);
+        return getDurationAsString(duration);
     }
 
     public String getId() {

@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import by.storksoft.VKontakte.*;
+import by.storksoft.vkontakte.AudioItem;
 
 public class PlaybackService extends Service {
 
-    private ArrayList<audioItem> list;
+    private ArrayList<AudioItem> list;
     private int current=-1;
     private boolean active;
     private int channel=0;
@@ -47,9 +47,9 @@ public class PlaybackService extends Service {
         this.context = c;
     }
 
-    public void setPlaylist(ArrayList<audioItem> playlist) {
+    public void setPlaylist(ArrayList<AudioItem> playlist) {
         list.clear();
-        for (audioItem a: playlist) list.add(a);
+        for (AudioItem a : playlist) list.add(a);
     }
 
     @Nullable
@@ -58,7 +58,7 @@ public class PlaybackService extends Service {
         return null;
     }
 
-    public void playURL(audioItem song, TextView passed, TextView left, SeekBar seek, ImageButton button) {
+    public void playURL(AudioItem song, TextView passed, TextView left, SeekBar seek, ImageButton button) {
         BASS.BASS_StreamFree(channel);
         playbutton=button;
         String URL = song.getMp3URL(), id = song.getId();
@@ -135,7 +135,7 @@ public class PlaybackService extends Service {
                 t1.post(new Runnable() {
                     @Override
                     public void run() {
-                        t1.setText(audioItem.getDurationAsString((int) (BASS.BASS_ChannelBytes2Seconds(channel,BASS.BASS_ChannelGetPosition(channel, 0)))));
+                        t1.setText(AudioItem.getDurationAsString((int) (BASS.BASS_ChannelBytes2Seconds(channel, BASS.BASS_ChannelGetPosition(channel, 0)))));
                         //Log.d("timer", "t1!=null");
                     }
                 });
@@ -144,7 +144,7 @@ public class PlaybackService extends Service {
                 t2.post(new Runnable() {
                     @Override
                     public void run() {
-                        t2.setText(audioItem.getDurationAsString((int) (BASS.BASS_ChannelBytes2Seconds(channel,(BASS.BASS_ChannelGetLength(channel, 0)-BASS.BASS_ChannelGetPosition(channel, 0))))));
+                        t2.setText(AudioItem.getDurationAsString((int) (BASS.BASS_ChannelBytes2Seconds(channel, (BASS.BASS_ChannelGetLength(channel, 0) - BASS.BASS_ChannelGetPosition(channel, 0))))));
                         //Log.d("timer", "t2!=null");
                         if (BASS.BASS_ChannelBytes2Seconds(channel,(BASS.BASS_ChannelGetLength(channel, 0)-BASS.BASS_ChannelGetPosition(channel, 0)))<1) forward();
                     }
@@ -175,7 +175,7 @@ public class PlaybackService extends Service {
 
                             }
                         });
-                        //t2.setText(audioItem.getDurationAsString((int) ((BASS.BASS_ChannelGetLength(channel, 0)-BASS.BASS_ChannelGetPosition(channel, 0))/1000)));
+                        //t2.setText(AudioItem.getDurationAsString((int) ((BASS.BASS_ChannelGetLength(channel, 0)-BASS.BASS_ChannelGetPosition(channel, 0))/1000)));
                         //Log.d("timer", "seekbar!=null");
                     }
                 });

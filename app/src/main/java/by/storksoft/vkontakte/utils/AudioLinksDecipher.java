@@ -1,19 +1,43 @@
-package by.storksoft.VKontakte;
+package by.storksoft.vkontakte.utils;
 
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Converts encrypted string from m.vk.com/audio into actual link to mp3 file.
  * Don't try to understand this shit below. If you want to rewrite this in different
  * language, you can try to google equivalents of some of Java methods used there.
+ * It's just Java equivalent of obfuscated JS code from VK, so method names are
+ * not meaningful
  */
 
-class audioLinkDecrypter {
+public class AudioLinksDecipher {
 
-    private static String key = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0PQRSTUVWXYZO123456789+/=";
+    private static String KEY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0PQRSTUVWXYZO123456789+/=";
+
+    public static String decipherURL(String url, int accountId) {
+        if (url.contains("audio_api_unavailable")) {
+            String[] tt = url.substring(url.indexOf("?extra=") + 7).split("#");
+            String n = od(tt[1]);
+            String t = od(tt[0]);
+            if (t.equals("") || n.equals("")) return url;
+            String[] an = n.split(fromCharCode(9));
+            String[] r;
+            for (int s = an.length - 1; s >= 0; s--) {
+                r = an[s].split(fromCharCode(11));
+                if (r[0].equals("x")) t = x(t, r[1].charAt(0));
+                if (r[0].equals("r")) t = r(t, Integer.valueOf(r[1]));
+                if (r[0].equals("v")) t = v(t);
+                if (r[0].equals("s")) t = s(t, Integer.valueOf(r[1]));
+                int param = Integer.parseInt(r[1]) ^ accountId;
+                if (r[0].equals("i")) t = s(t, param);
+
+            }
+            if (t.substring(0, 4).equals("http")) return t;
+        } else return url; //vk sometimes give's actual links
+        return null;
+    }
 
     private static String fromCharCode(int... codePoints) {
         return new String(codePoints, 0, codePoints.length);
@@ -25,7 +49,7 @@ class audioLinkDecrypter {
         String r = "";
         for (int o = 0; o < e.length(); o++) {
             i = e.charAt(o);
-            i = key.indexOf(i);
+            i = KEY.indexOf(i);
             t = (a % 4 != 0) ? 64 * t + i : i;
             a++;
             if (a % 4 == 1) continue;
@@ -44,7 +68,7 @@ class audioLinkDecrypter {
     private static String r(String e, int t) {
         String[] ar = e.split("");
         int i;
-        String a = key + key;
+        String a = KEY + KEY;
         for (int o = ar.length - 1; o >= 0; o--) {
             i = a.indexOf(ar[o]);
             if (i == -1) continue;
@@ -85,7 +109,7 @@ class audioLinkDecrypter {
         int n = e.length();
         int[] i = s2(e, t);
         int a = 0;
-        //idk why split("") adds void element in the beginnin, this is hotfix:
+        //idk why split("") adds void element in the beginning, this is hotfix:
         String[] ar = Arrays.copyOfRange(e.split(""),1,e.split("").length);
         //String[] ar = e.split("");
         for (; ++a < n; ) {
@@ -96,32 +120,5 @@ class audioLinkDecrypter {
         StringBuilder s = new StringBuilder();
         for (String is : ar) s.append(is);
         return s.toString();
-    }
-
-    static String getURLfromCode(String e, int id) {
-        if (e.contains("audio_api_unavailable")) {
-            String[] tt = e.substring(e.indexOf("?extra=") + 7).split("#");
-            String n = od(tt[1]);
-            String t = od(tt[0]);
-            if (t.equals("") || n.equals("")) return e;
-            String[] an = n.split(fromCharCode(9));
-            String[] r;
-            for (int s = an.length - 1; s >= 0; s--) {
-                r = an[s].split(fromCharCode(11));
-                Log.d("decrypt", Arrays.toString(r));
-                if (r[0].equals("x")) t = x(t, r[1].charAt(0));
-                if (r[0].equals("r")) t = r(t, Integer.valueOf(r[1]));
-                if (r[0].equals("v")) t = v(t);
-                if (r[0].equals("s")) t = s(t, Integer.valueOf(r[1]));
-                int param = Integer.parseInt(r[1]) ^ id;
-                Log.d("params", t+", "+param);
-                if (r[0].equals("i")) t = s(t, param);
-                Log.d("params", t);
-
-            }
-            Log.d("decrypt", t);
-            if (t.substring(0, 4).equals("http")) return t;
-        } else return e; //vk sometimes give's actual links
-        return null;
     }
 }
